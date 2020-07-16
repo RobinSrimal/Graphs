@@ -1,3 +1,19 @@
+import random
+
+class Queue():
+    def __init__(self):
+        self.queue = []
+    def enqueue(self, value):
+        self.queue.append(value)
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+    def size(self):
+        return len(self.queue)
+
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -38,6 +54,23 @@ class SocialGraph:
 
         The number of users must be greater than the average number of friendships.
         """
+        
+        # sanity checks
+        if avg_friendships >= num_users:
+
+            print("num_users has to be bigger than avg_friendships")
+
+            return
+
+        if avg_friendships == 1:
+
+            if num_users%2 == 1:
+
+                print("""input cannot be processed. If avg friendships is one, 
+                num_users must be a multiple of 2.""")
+
+                return
+ 
         # Reset graph
         self.last_id = 0
         self.users = {}
@@ -45,6 +78,36 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+
+        for user in range(num_users):
+
+            self.add_user("Hans")
+
+        total_friendships = (num_users*avg_friendships)//2
+
+
+        while total_friendships > 0:
+
+            user = random.randint(1,self.last_id)
+
+            friend = random.randint(1,self.last_id)
+
+            if user == friend:
+
+                continue
+
+            if friend in self.friendships[user]:
+
+                continue
+
+            if len(self.friendships[user]) >= 4:
+
+                continue
+
+            self.add_friendship(user, friend)
+
+            total_friendships -= 1
+
 
         # Create friendships
 
@@ -59,7 +122,27 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        
+
+        q = Queue()
+
+        q.enqueue([user_id])
+
+        while q.size() > 0:
+        
+            path = q.dequeue()
+
+            visited[path[-1]] = path
+
+            for friend in self.friendships[path[-1]]:
+
+                if friend not in visited:
+
+                    q.enqueue(path + [friend])
+
         return visited
+
+        # find shortest paths
 
 
 if __name__ == '__main__':

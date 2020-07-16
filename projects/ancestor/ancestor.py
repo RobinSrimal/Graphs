@@ -16,6 +16,7 @@ def earliest_ancestor(ancestors, starting_node):
 
     switch = True
 
+    # define starting point for while loop
     ancestors = [starting_node]
 
     while switch:
@@ -24,20 +25,26 @@ def earliest_ancestor(ancestors, starting_node):
 
         temp = []
 
+        # go through the list of current oldest ancestors
         for node in ancestors:
 
+            # if an ancestor has parents    
             if graph[node]:
 
-                switch = True
-
+                # add those parents to temp    
                 for parent in graph[node]:
 
                     temp.append(parent)
-
+        
+        # if temp is not empty we found an older generation of ancestors
         if temp:
 
-            paths = temp
-
+            # therefore the while loop has to run another time 
+            switch = True
+            ancestors = temp
+    
+    # once the while loop is done return the minimum value of the oldest 
+    # genration of ancestors that was found
     return min(ancestors)
 
 
