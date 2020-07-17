@@ -100,7 +100,7 @@ class SocialGraph:
 
                 continue
 
-            if len(self.friendships[user]) >= 4:
+            if len(self.friendships[user]) >= avg_friendships*2:
 
                 continue
 

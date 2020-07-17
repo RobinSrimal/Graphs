@@ -25,9 +25,55 @@ world.print_rooms()
 
 player = Player(world.starting_room)
 
+
+
 # Fill this out with directions to walk
-# traversal_path = ['n', 'n']
 traversal_path = []
+
+# Used when current room already visited to go back to previous room
+opposite = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
+
+def traverse(room, seen=None):
+
+    # create a set when the function is called the first time
+    if seen is None:
+
+        seen = set()
+
+    path = []
+    room = player.current_room
+
+    # Iterate over possible directions
+    for direction in room.get_exits():
+
+        player.travel(direction)
+        room = player.current_room
+
+        # If the room was seen, turn around = take the opposite of the direction 
+        # that was travelled
+        if room in seen:
+
+            player.travel(opposite[direction])
+
+        # Otherwise, add room to seen and direction to path
+        else:
+
+            seen.add(room)
+            path.append(direction)
+
+            # Recursively call function again on this room and add to path
+            path = path + traverse(room, seen)
+            player.travel(opposite[direction])
+            path.append(opposite[direction])
+
+    return path
+
+
+
+traversal_path = traverse(player.current_room)
+
+print(traversal_path)
+
 
 # TRAVERSAL TEST
 visited_rooms = set()
@@ -47,12 +93,12 @@ else:
 #######
 # UNCOMMENT TO WALK AROUND
 #######
-player.current_room.print_room_description(player)
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
-    else:
-        print("I did not understand that command.")
+# player.current_room.print_room_description(player)
+# while True:
+#     cmds = input("-> ").lower().split(" ")
+#     if cmds[0] in ["n", "s", "e", "w"]:
+#         player.travel(cmds[0], True)
+#     elif cmds[0] == "q":
+#         break
+#     else:
+#         print("I did not understand that command.")
